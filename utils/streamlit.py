@@ -22,18 +22,22 @@ def model_settings(settings: dict, columns: int = 3):
     return kwargs
 
 
-def plot_dataset(df: pd.DataFrame):
+def axis_selector(columns: list):
     left, right = st.columns(2)
-    x_axis_col = left.selectbox("X axis:", options=df.columns, index=0)
+    x_axis_col = left.selectbox("X axis:", options=columns, index=0)
     y_axis_col = right.selectbox(
-        "Y axis:", options=df.columns, index=min(len(df.columns) - 1, 1)
+        "Y axis:", options=columns, index=min(len(columns) - 1, 1)
     )
+    return x_axis_col, y_axis_col
+
+
+def plot_dataset(df: pd.DataFrame, x: str, y: str):
     chart = (
         alt.Chart(df)
         .mark_circle(size=60)
         .encode(
-            x=alt.X(x_axis_col, scale=alt.Scale(zero=False, padding=1)),
-            y=alt.Y(y_axis_col, scale=alt.Scale(zero=False, padding=1)),
+            x=alt.X(x, scale=alt.Scale(zero=False, padding=1)),
+            y=alt.Y(y, scale=alt.Scale(zero=False, padding=1)),
             color="cluster",
             tooltip=list(df.columns),
         )

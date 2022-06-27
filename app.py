@@ -5,6 +5,7 @@ import pandas as pd
 import streamlit as st
 
 import utils.streamlit as stx
+from utils.code_builder import make_code_block
 from utils.sklearn import datasets, models
 
 ### Title ######################################################################
@@ -47,7 +48,6 @@ if use_adv:
 
 model_kwargs = stx.model_settings(model_settings)
 model = models[model_key]["class"](**model_kwargs)
-st.write("model = ", model)
 
 ### Fit model ##################################################################
 st.subheader("Fit model")
@@ -75,7 +75,7 @@ else:
             model_is_fitted = True
 
 if model_is_fitted:
-    df["cluster"] = list(map(str, model.labels_))
+    df["cluster"] = model.labels_.astype(str)
 
 ### Plot results ###############################################################
 st.subheader("Plot results")
@@ -84,4 +84,17 @@ if not model_is_fitted:
     st.warning("Model needs to be fitted first.")
     st.stop()
 
-stx.plot_dataset(df)
+plot_x_axis, plot_y_axis = stx.axis_selector(df.columns)
+stx.plot_dataset(df, plot_x_axis, plot_y_axis)
+
+### Python code ################################################################
+st.subheader("Python code")
+
+code = make_code_block(
+    model=model,
+    data_callable=datasets[dataset_key],
+    feature_cols=data_columns,
+    plot_x_axis=plot_x_axis,
+    plot_y_axis=plot_y_axis,
+)
+st.code(code, language="python")
