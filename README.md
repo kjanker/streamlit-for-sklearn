@@ -2,7 +2,9 @@
 
 Streamlit app for a simple work flow in sklearn. This is a demo application how to built a streamlit dashboard for data analysis.
 
-## How to run it
+🚀 Check it out [online](https://kjanker-streamlit-for-sklearn-app-84iynr.streamlitapp.com/)!
+
+## How to run it locally
 
 The repo is up and running in three simple steps.
 
