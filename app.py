@@ -1,6 +1,8 @@
 """
 Streamlit app and main entry point. Run with `streamlit run app.py`.
 """
+from warnings import catch_warnings
+
 import pandas as pd
 import streamlit as st
 
@@ -64,15 +66,18 @@ if data.shape[1] == 0:
     st.warning("Please select some data first.")
 else:
     with st.spinner("Fitting the model..."):
-        try:
-            model.fit(data)
-        except Exception as error:
-            st.error(
-                f"**Incorrect model arguments:** {error} ({error.__class__.__name__})"
-            )
-        else:
-            st.success("Model fitted to the data.")
-            model_is_fitted = True
+        with catch_warnings(record=True) as warnings:
+            try:
+                model.fit(data)
+            except Exception as error:
+                st.error(
+                    f"**Incorrect model arguments:** {error} ({error.__class__.__name__})"
+                )
+            else:
+                for warning in warnings:
+                    st.warning(f"**{warning.category.__name__}:** {warning.message}")
+                st.success("**Success:** Model is fitted to the data.")
+                model_is_fitted = True
 
 if model_is_fitted:
     df["cluster"] = model.labels_.astype(str)
