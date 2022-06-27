@@ -33,8 +33,9 @@ with st.spinner("Loading dataset..."):
 with st.expander("Show description"):
     st.write(dataset["DESCR"])
 
-df = pd.DataFrame(dataset["data"], columns=dataset["feature_names"])
-df["target"] = dataset["target"]
+df = pd.DataFrame(dataset["data"], columns=dataset["feature_names"]).join(
+    pd.Series(dataset["target"], name="target")
+)
 
 st.dataframe(df)
 

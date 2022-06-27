@@ -16,8 +16,9 @@ from {get_import_path(data_callable)} import {data_callable.__name__}
 
 # load and prepare the data
 dataset = {data_callable.__name__}()
-df = pd.DataFrame(dataset['data'], columns=dataset['feature_names'])
-df['target'] = dataset['target']
+df = pd.DataFrame(dataset['data'], columns=dataset['feature_names']).join(
+    pd.Series(dataset['target'], name='target')
+)
 data = df[{feature_cols}].values
 
 # create and fit the model
